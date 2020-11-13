@@ -1,6 +1,8 @@
 __pycache__/
 app.sqlite
 .cache
+.idea
 *.pyc
 env
 venv
+migrations
