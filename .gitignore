@@ -1,7 +1,7 @@
 __pycache__/
 app.sqlite
 .cache
-.idea
+.idea/
 *.pyc
 env
 venv
