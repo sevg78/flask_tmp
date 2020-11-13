@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+
+{% from "bootstrap/wtf.html" import form_field %}
+<h1>{{ _('Edit Your Profile') }}</h1>
+<div class="col-md-4">
+  <form class="form" action="{{ url_for('users.edit_profile') }}" method="POST" name="edit_profile_form">
+    {{ edit_profile_form.hidden_tag() }}
+    {{ form_field(edit_profile_form.name) }}
+    {{ form_field(edit_profile_form.location) }}
+    {{ form_field(edit_profile_form.about_me) }}
+
+    {{ form_field(edit_profile_form.submit, class="btn btn-primary") }}
+  </form>
+</div>
+{% endblock %}

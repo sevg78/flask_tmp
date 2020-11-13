@@ -1,0 +1,18 @@
+{% from 'bootstrap/wtf.html' import form_field %}
+<form id="ModalForm" name="stepForm" class="form" method="post">
+    <div class="modal-header">
+        <h2 class="modal-title">{{ _('Login') }}</h2>
+    </div>
+    <div class="modal-body">
+      {{ login_form.hidden_tag() }}
+       {{ form_field(login_form.username) }}
+      {{ form_field(login_form.password) }}
+      {{ form_field(login_form.remember) }}
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+        <button id="submit" type="submit" class="btn btn-success">Войти</button>
+      <p>Forgot your password? <a href="{{ url_for('users.password_reset_request') }}">Click here to reset it</a>.</p>
+              <p>New user? <a href="{{ url_for('users.reg') }}">Click here to register</a>.</p>
+    </div>
+</form>

@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% from "bootstrap/wtf.html" import form_field %}
+  <h1>{{ _('Register') }}</h1>
+<div class="col-md-4">
+  <form action="{{ url_for('users.register') }}" method="POST" name="register_user_form">
+    {{ register_user_form.hidden_tag() }}
+    {{ form_field(register_user_form.username) }}
+    {{ form_field(register_user_form.email) }}
+    {{ form_field(register_user_form.password) }}
+    {{ form_field(register_user_form.password_confirm) }}
+
+    {{ form_field(register_user_form.submit, class="btn btn-primary") }}
+  </form>
+</div>
+{% endblock %}

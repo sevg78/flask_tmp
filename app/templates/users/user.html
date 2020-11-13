@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<div class="page-header">
+<img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=128) }}">
+<div class="profile-header">
+<h3 class="mt-5">--=={{ user.username }}==--</h3>
+    {% if user.name or user.location %}
+        <p>{% if user.name %}{{ user.name }}{% endif %}
+        {% if user.location %}
+        From <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
+        {% endif %}
+        </p>
+    {% endif %}
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+    <p>Member since {{ moment(user.member_since).format('L') }}. Last seen {{ moment(user.last_seen).fromNow() }}.</p>
+ </div>
+    {% if current_user.username == user.username %}
+    <a class="btn btn-primary" href="{{ url_for('users.edit_profile') }}">Edit Profile</a>
+    <a class="btn btn-primary" href="{{ url_for('users.change_password') }}">Reset Password</a>
+    <a class="btn btn-primary" href="{{ url_for('users.change_email_request') }}">Change Email</a>
+    {% endif %}
+</div>
+{% endblock %}

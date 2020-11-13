@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+
+{% from "bootstrap/wtf.html" import form_field %}
+<h1>{{ _('Change Email Address') }}</h1>
+<div class="col-md-4">
+  <form class="form" action="{{ url_for('users.change_email_request') }}" method="POST" name="change_email_form">
+    {{ change_email_form.hidden_tag() }}
+    {{ form_field(change_email_form.email) }}
+    {{ form_field(change_email_form.password) }}
+
+    {{ form_field(change_email_form.submit, class="btn btn-primary") }}
+  </form>
+</div>
+{% endblock %}
