@@ -4,7 +4,6 @@ from flask import (
     flash,
     redirect,
     url_for,
-    current_app,
     render_template,
     render_template_string,
     jsonify,

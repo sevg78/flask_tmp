@@ -2,7 +2,7 @@ from app.database import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import login_manager
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, request
 import hashlib
@@ -20,6 +20,9 @@ class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
+
+    def __repr__(self):
+        return self.name
 
 
 class User(db.Model, UserMixin):
@@ -122,6 +125,20 @@ class User(db.Model, UserMixin):
         self.avatar_hash = self.gravatar_hash()
         db.session.add(self)
         return True
+
+    def is_administrator(self):
+        for r in self.roles:
+            if str(r) == 'admin':
+                return True
+        return False
+
+
+class AnonymousUser(AnonymousUserMixin):
+    def is_administrator(self):
+        return False
+
+
+login_manager.anonymous_user = AnonymousUser
 
 
 @login_manager.user_loader

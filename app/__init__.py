@@ -1,12 +1,14 @@
 import os
-from flask import Flask
+from flask import Flask, redirect, request, url_for
 from flask_bootstrap import Bootstrap
 from flask_babelex import Babel
 from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_moment import Moment
-
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.fileadmin import FileAdmin
+from flask_admin.contrib.sqla import ModelView
 from .database import db
 
 login_manager = LoginManager()
@@ -15,6 +17,7 @@ csrf_protect = CSRFProtect()
 mail = Mail()
 babel = Babel()
 moment = Moment()
+admin = Admin()
 
 
 def create_app():
@@ -40,5 +43,37 @@ def create_app():
 
     import app.users.controllers as users
     app.register_blueprint(users.module)
+
+    # Flask Admin
+
+    from wtforms.fields import HiddenField
+    from app.users.models import User, Role
+
+    class AdminMixin:
+        def is_accessible(self):
+            return current_user.is_administrator()
+
+        def inaccessible_callback(self, name, **kwargs):
+            return redirect(url_for('users.log', next=request.url))
+
+    class HomeAdminView(AdminMixin, AdminIndexView):
+        pass
+
+    class AdminUserView(AdminMixin, ModelView):
+        can_create = False
+        column_exclude_list = ('password_hash')
+        form_overrides = dict(password_hash=HiddenField)
+
+    class RoleView(AdminMixin, ModelView):
+        pass
+
+    class FileView(AdminMixin, FileAdmin):
+        pass
+
+    admin = Admin(app, 'Adminka', url='/', index_view=HomeAdminView(name='Home'), template_mode='bootstrap3')
+    admin.add_view(AdminUserView(User, db.session))
+    admin.add_view(RoleView(Role, db.session))
+    path = os.path.join(os.path.dirname(__file__), 'static')
+    admin.add_view(FileView(path, '/static/', name='Files'))
 
     return app
