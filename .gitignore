@@ -2,6 +2,7 @@ __pycache__/
 app.sqlite
 .cache
 .idea/
+.vscode/
 *.pyc
 env
 venv
