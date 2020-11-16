@@ -77,3 +77,4 @@ def create_app():
     admin.add_view(FileView(path, '/static/', name='Files'))
 
     return app
+    
