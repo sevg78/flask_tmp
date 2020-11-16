@@ -40,25 +40,6 @@ def index():
     return render_template('users/index.html')
 
 
-''''        --== OLD ==--
-@module.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('users.index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is not None and user.verify_password(form.password.data):
-            login_user(user, form.remember.data)
-            next = request.args.get('next')
-            if next is None or not next.startswith('/'):
-                next = url_for('users.index')
-            return redirect(next)
-        flash('Invalid username or password.')
-    return render_template('users/OLD_login_user.html', login_form=form)
-'''
-
-
 @module.route('/login_modal', methods=['GET', 'POST'])
 def login_modal():
     if current_user.is_authenticated:
@@ -117,27 +98,6 @@ def register_modal():
             data = json.dumps(form.errors, ensure_ascii=False)
             return jsonify(data)
     return render_template('users/_register_user.html', register_user_form=form)
-
-
-'''                 --== OLD ==--
-@module.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('users.index'))
-    form =RegistrationForm()
-    if form.validate_on_submit():
-        user = User(email=form.email.data,
-                    username=form.username.data,
-                    password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        token = user.generate_confirmation_token()
-        send_email(user.email, 'Confirm Your Account',
-                   'users/email/confirm', user=user, token=token)
-        flash('A confirmation email has been sent to you by email.')
-        return redirect(url_for('users.log'))
-    return render_template('users/OLD_register_user.html', register_user_form=form)
-'''
 
 
 @module.route('/confirm/<token>')
@@ -224,6 +184,31 @@ def password_reset_request():
               'sent to you.')
         return redirect(url_for('users.index'))
     return render_template('users/reset_password_request.html', password_reset_request_form=form)
+
+
+@module.route('/reset_modal', methods=['GET', 'POST'])
+def password_reset_req():
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    form = PasswordResetRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data.lower()).first()
+        if user:
+            token = user.generate_reset_token()
+            send_email(user.email, 'Reset Your Password',
+                       'users/email/reset_password',
+                       user=user, token=token)
+        flash('An email with instructions to reset your password has been '
+              'sent to you.')
+        return redirect(url_for('users.index'))
+    return render_template('users/_reset_password_request.html', password_reset_request_form=form)
+
+
+@module.route('/res')
+def res():
+    if current_user.is_authenticated:
+        return redirect(url_for('users.index'))
+    return render_template('users/reset_password_req.html')
 
 
 @module.route('/reset/<token>', methods=['GET', 'POST'])
