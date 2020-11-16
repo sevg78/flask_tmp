@@ -1,5 +1,6 @@
 __pycache__/
 app.sqlite
+*.db
 .cache
 .idea/
 .vscode/
