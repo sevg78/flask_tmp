@@ -172,6 +172,7 @@ def change_password():
     return render_template('users/change_password.html', change_password_form=form)
 
 
+'''
 @module.route('/reset', methods=['GET', 'POST'])
 def password_reset_request():
     if not current_user.is_anonymous:
@@ -188,6 +189,7 @@ def password_reset_request():
               'sent to you.')
         return redirect(url_for('users.index'))
     return render_template('users/reset_password_request.html', password_reset_request_form=form)
+'''
 
 
 @module.route('/reset_modal', methods=['GET', 'POST'])
@@ -214,15 +216,32 @@ def password_reset_req():
     return render_template('users/_reset_password_request.html', password_reset_request_form=form)
 
 
-@module.route('/res')
-def res():
+@module.route('/res/<token>', methods=['GET', 'POST'])
+def res(token):
     if current_user.is_authenticated:
         return redirect(url_for('users.index'))
-    return render_template('users/reset_password_req.html')
+    return render_template('users/res.html')
 
 
-@module.route('/reset/<token>', methods=['GET', 'POST'])
-def password_reset(token):
+@module.route('/res', methods=['GET', 'POST'])
+def password_reset():
+    if not current_user.is_anonymous:
+        return redirect(url_for('users.index'))
+    form = PasswordResetForm()
+    if form.validate_on_submit():
+        content = request.json['token']
+        print('======', content)
+        if User.reset_password('token', form.password.data):
+            db.session.commit()
+            flash('Your password has been updated.')
+            return redirect(url_for('users.log'))
+        else:
+            return redirect(url_for('users.index'))
+    return render_template('users/_reset_password.html', password_reset_form=form)
+
+
+@module.route('/reset_modal/<token>', methods=['GET', 'POST'])
+def password_res(token):
     if not current_user.is_anonymous:
         return redirect(url_for('users.index'))
     form = PasswordResetForm()
@@ -233,7 +252,7 @@ def password_reset(token):
             return redirect(url_for('users.log'))
         else:
             return redirect(url_for('users.index'))
-    return render_template('users/reset_password.html', password_reset_form=form)
+    return render_template('users/_reset_password.html', password_reset_form=form)
 
 
 @module.route('/change_email', methods=['GET', 'POST'])
