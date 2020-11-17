@@ -45,12 +45,16 @@ def login_modal():
     if current_user.is_authenticated:
         return redirect(url_for('users.index'))
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is not None and user.verify_password(form.password.data):
-            login_user(user, form.remember.data)
-            return jsonify(status='ok')
-        return jsonify(status='Invalid username or password.')
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            user = User.query.filter_by(username=form.username.data).first()
+            if user is not None and user.verify_password(form.password.data):
+                login_user(user, form.remember.data)
+                return jsonify(status='ok')
+            return jsonify(status='Invalid username or password')
+        else:
+                data = json.dumps(form.errors, ensure_ascii=False)
+                return jsonify(data)
     return render_template('users/_login_user.html', login_form=form)
 
 
@@ -191,16 +195,22 @@ def password_reset_req():
     if not current_user.is_anonymous:
         return redirect(url_for('main.index'))
     form = PasswordResetRequestForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data.lower()).first()
-        if user:
-            token = user.generate_reset_token()
-            send_email(user.email, 'Reset Your Password',
-                       'users/email/reset_password',
-                       user=user, token=token)
-        flash('An email with instructions to reset your password has been '
-              'sent to you.')
-        return redirect(url_for('users.index'))
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            user = User.query.filter_by(email=form.email.data.lower()).first()
+            if user:
+                token = user.generate_reset_token()
+                send_email(user.email, 'Reset Your Password',
+                        'users/email/reset_password',
+                        user=user, token=token)
+                flash('An email with instructions to reset your password has been '
+                        'sent to you.')
+                return jsonify(status='ok')
+            else:
+                return jsonify(status='Email not registered')
+        else:
+            data = json.dumps(form.errors, ensure_ascii=False)
+            return jsonify(data)
     return render_template('users/_reset_password_request.html', password_reset_request_form=form)
 
 
