@@ -11,11 +11,11 @@ from flask import (
 import json
 from datetime import datetime
 from flask_login import login_required, login_user, logout_user, current_user
-from app.users.forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
+from . forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
                             PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
-from app.users.models import User
-from app.database import db
-from app.users.mail import send_email
+from . models import User
+from . . database import db
+from . mail import send_email
 
 module = Blueprint('users', __name__)
 
@@ -170,26 +170,6 @@ def change_password():
         else:
             flash('Invalid password.')
     return render_template('users/change_password.html', change_password_form=form)
-
-
-'''
-@module.route('/reset', methods=['GET', 'POST'])
-def password_reset_request():
-    if not current_user.is_anonymous:
-        return redirect(url_for('main.index'))
-    form = PasswordResetRequestForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data.lower()).first()
-        if user:
-            token = user.generate_reset_token()
-            send_email(user.email, 'Reset Your Password',
-                       'users/email/reset_password',
-                       user=user, token=token)
-        flash('An email with instructions to reset your password has been '
-              'sent to you.')
-        return redirect(url_for('users.index'))
-    return render_template('users/reset_password_request.html', password_reset_request_form=form)
-'''
 
 
 @module.route('/reset_modal', methods=['GET', 'POST'])
