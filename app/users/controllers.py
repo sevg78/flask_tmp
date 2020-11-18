@@ -156,28 +156,23 @@ def edit_profile():
     return render_template('users/edit_profile.html', edit_profile_form=form)
 
 
-'''
-@module.route('/change-password', methods=['GET', 'POST'])
-@login_required
-def change_password():
-    form = ChangePasswordForm()
-    if form.validate_on_submit():
-        if current_user.verify_password(form.old_password.data):
-            current_user.password = form.password.data
-            db.session.add(current_user)
-            db.session.commit()
-            flash('Your password has been updated.')
-            return redirect(url_for('users.user', username=current_user.username))
-        else:
-            flash('Invalid password.')
-    return render_template('users/change_password.html', change_password_form=form)
-'''
-
-
 @module.route('/change_pass', methods=['GET', 'POST'])
 @login_required
 def change_pass():
     form = ChangePasswordForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if current_user.verify_password(form.old_password.data):
+                current_user.password = form.password.data
+                db.session.add(current_user)
+                db.session.commit()
+                flash('Your password has been updated.')
+                return jsonify(status='ok')
+            else:
+                return jsonify(status='Invalid old password')
+        else:
+            data = json.dumps(form.errors, ensure_ascii=False)
+            return jsonify(data)
     return render_template('users/_change_password.html', change_password_form=form)
 
 

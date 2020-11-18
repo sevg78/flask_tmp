@@ -42,7 +42,7 @@ $(document).ready(function () {
                         $('#Modal').modal('hide');
                         var url = '/index'
                         $(location).attr('href', url);
-                    } if (data.status == 'Invalid username or password') {
+                    } if (data.status == 'Invalid old password') {
                         $('.err').remove();
                         $('.help-block').remove();
                         $('<h4 class="err">' + data.status + '</h4>').insertAfter('.modal-title');
