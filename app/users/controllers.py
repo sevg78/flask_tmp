@@ -216,43 +216,37 @@ def password_reset_req():
     return render_template('users/_reset_password_request.html', password_reset_request_form=form)
 
 
+@module.route('/res_req')
+def res_req():
+    if current_user.is_authenticated:
+        return redirect(url_for('users.index'))
+    return render_template('users/reset_password_req.html')
+
+
+@module.route('/res_modal', methods=['GET', 'POST'])
+def password_res():
+    if not current_user.is_anonymous:
+        return redirect(url_for('users.index'))
+    form = PasswordResetForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if User.reset_password(request.form['token'], request.form['password']):
+                db.session.commit()
+                flash('Your password has been updated.')
+                return jsonify(status='ok')
+            else:
+                return jsonify(status='Error!!!')
+        else:
+                data = json.dumps(form.errors, ensure_ascii=False)
+                return jsonify(data)
+    return render_template('users/_reset_password.html', password_reset_form=form)
+
+
 @module.route('/res/<token>', methods=['GET', 'POST'])
 def res(token):
     if current_user.is_authenticated:
         return redirect(url_for('users.index'))
-    return render_template('users/res.html')
-
-
-@module.route('/res', methods=['GET', 'POST'])
-def password_reset():
-    if not current_user.is_anonymous:
-        return redirect(url_for('users.index'))
-    form = PasswordResetForm()
-    if form.validate_on_submit():
-        content = request.json['token']
-        print('======', content)
-        if User.reset_password('token', form.password.data):
-            db.session.commit()
-            flash('Your password has been updated.')
-            return redirect(url_for('users.log'))
-        else:
-            return redirect(url_for('users.index'))
-    return render_template('users/_reset_password.html', password_reset_form=form)
-
-
-@module.route('/reset_modal/<token>', methods=['GET', 'POST'])
-def password_res(token):
-    if not current_user.is_anonymous:
-        return redirect(url_for('users.index'))
-    form = PasswordResetForm()
-    if form.validate_on_submit():
-        if User.reset_password(token, form.password.data):
-            db.session.commit()
-            flash('Your password has been updated.')
-            return redirect(url_for('users.log'))
-        else:
-            return redirect(url_for('users.index'))
-    return render_template('users/_reset_password.html', password_reset_form=form)
+    return render_template('users/reset.html')
 
 
 @module.route('/change_email', methods=['GET', 'POST'])

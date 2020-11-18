@@ -4,23 +4,25 @@
 {{ super() }}
 <script>
 $(document).ready(function () {
-        var url = '/res';
+        var token = window.location.pathname.substr(5);
+        var url = '/res_modal';
         $.get(url, function (data) {
             $('#Modal .modal-content').html(data);
             $('#Modal').modal();
             $('#submit').click(function (event) {
                 event.preventDefault();
-                console.log('xxx', window.location.pathname.substr(5));
-                $.post(url, data = $('#ModalForm').serialize(), function (
+                var data = $('#ModalForm').serializeArray();
+                data.push({name: 'token', value: token});
+                $.post(url, data, function (
                     data) {
                         if (data.status == 'ok') {
                         $('#Modal').modal('hide');
                         var url = '/index'
                         $(location).attr('href', url);
-                    } if (data.status == 'Invalid username or password') {
+                    } if (data.status == 'Error!!!') {
                         $('.err').remove();
                         $('.help-block').remove();
-                        $('<h4 class="err">' + data.status + '</h4>').insertAfter('.modal-title');
+                        $('<h4 class="err">' + data.status + ' Invalid token!!!' + '</h4>').insertAfter('.modal-title');
                         $('.form-group').addClass('has-error');
                     } else {
                         var obj = JSON.parse(data);

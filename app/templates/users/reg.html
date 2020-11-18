@@ -3,7 +3,7 @@
 {{ super() }}
 <script>
 $(document).ready(function () {
-        var url = 'register_modal';
+        var url = '/register_modal';
         $.get(url, function (data) {
             $('#Modal .modal-content').html(data);
             $('#Modal').modal();
