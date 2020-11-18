@@ -156,6 +156,7 @@ def edit_profile():
     return render_template('users/edit_profile.html', edit_profile_form=form)
 
 
+'''
 @module.route('/change-password', methods=['GET', 'POST'])
 @login_required
 def change_password():
@@ -170,6 +171,14 @@ def change_password():
         else:
             flash('Invalid password.')
     return render_template('users/change_password.html', change_password_form=form)
+'''
+
+
+@module.route('/change_pass', methods=['GET', 'POST'])
+@login_required
+def change_pass():
+    form = ChangePasswordForm()
+    return render_template('users/_change_password.html', change_password_form=form)
 
 
 @module.route('/reset_modal', methods=['GET', 'POST'])

@@ -18,8 +18,53 @@
  </div>
     {% if current_user.username == user.username %}
     <a class="btn btn-primary" href="{{ url_for('users.edit_profile') }}">Edit Profile</a>
-    <a class="btn btn-primary" href="{{ url_for('users.change_password') }}">Reset Password</a>
+    <a class="btn btn-primary" id="res" href="#">Reset Password</a>
     <a class="btn btn-primary" href="{{ url_for('users.change_email_request') }}">Change Email</a>
     {% endif %}
 </div>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function () {
+  $( "#res" ).click(function(){
+        var url = '/change_pass';
+        $.get(url, function (data) {
+            $('#Modal .modal-content').html(data);
+            $('#Modal').modal();
+            $('#submit').click(function (event) {
+                event.preventDefault();
+                $.post(url, data = $('#ModalForm').serialize(), function (
+                    data) {
+                        if (data.status == 'ok') {
+                        $('#Modal').modal('hide');
+                        var url = '/index'
+                        $(location).attr('href', url);
+                    } if (data.status == 'Invalid username or password') {
+                        $('.err').remove();
+                        $('.help-block').remove();
+                        $('<h4 class="err">' + data.status + '</h4>').insertAfter('.modal-title');
+                        $('.form-group').addClass('has-error');
+                    } else {
+                        var obj = JSON.parse(data);
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key)) {
+                                var value = obj[key];
+                            }
+                        }
+                        $('.help-block').remove();
+                        $('.err').remove();
+                        $('.form-group').removeClass('has-error');
+                        $('<p class="help-block">' + value + '</p>')
+                            .insertAfter('#' + key);
+                        $('#' + key).parent().addClass('has-error');
+                    }
+                });
+            });
+        });
+  });      
+});
+</script>
 {% endblock %}
