@@ -10,9 +10,9 @@
       {{ form_field(login_form.remember) }}
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-        <button id="submit" type="submit" class="btn btn-success">Войти</button>
-      <p>Forgot your password? <a href="{{ url_for('users.res_req') }}">Click here to reset it</a>.</p>
-              <p>New user? <a href="{{ url_for('users.reg') }}">Click here to register</a>.</p>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Cancel') }}</button>
+        <button id="submit" type="submit" class="btn btn-success">{{ _('Enter') }}</button>
+      <p>Forgot your password? <a href="{{ url_for('users.res_req') }}">{{ _('Click here to reset it') }}</a>.</p>
+              <p>New user? <a href="{{ url_for('users.reg') }}">{{ _('Click here to register') }}</a>.</p>
     </div>
 </form>
