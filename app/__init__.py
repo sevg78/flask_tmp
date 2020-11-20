@@ -1,7 +1,6 @@
 import os
 from flask import Flask, redirect, request, url_for
 from flask_bootstrap import Bootstrap
-from flask_babelex import Babel
 from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail
 from flask_login import LoginManager, current_user
@@ -15,7 +14,6 @@ login_manager = LoginManager()
 bootstrap = Bootstrap()
 csrf_protect = CSRFProtect()
 mail = Mail()
-babel = Babel()
 moment = Moment()
 admin = Admin()
 
@@ -32,8 +30,6 @@ def create_app():
     login_manager.login_view = 'users.log'
 
     bootstrap.init_app(app)
-
-    babel.init_app(app)
 
     mail.init_app(app)
 
@@ -77,4 +73,3 @@ def create_app():
     admin.add_view(FileView(path, '/static/', name='Files'))
 
     return app
-    

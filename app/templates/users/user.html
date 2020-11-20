@@ -14,12 +14,12 @@
         </p>
     {% endif %}
     {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-    <p>Member since {{ moment(user.member_since).format('L') }}. Last seen {{ moment(user.last_seen).fromNow() }}.</p>
+    <p>Зарегистрирован {{ moment(user.member_since).format('L') }}. Последнее посещение {{ moment(user.last_seen).fromNow() }}.</p>
  </div>
     {% if current_user.username == user.username %}
-    <a class="btn btn-primary" href="{{ url_for('users.edit_profile') }}">Edit Profile</a>
-    <a class="btn btn-primary" id="res" href="#">Reset Password</a>
-    <a class="btn btn-primary" href="{{ url_for('users.change_email_request') }}">Change Email</a>
+    <a class="btn btn-primary" href="{{ url_for('users.edit_profile') }}">Редактироварь профиль</a>
+    <a class="btn btn-primary" id="res" href="#">Смена пароля</a>
+    <a class="btn btn-primary" href="{{ url_for('users.change_email_request') }}">Смена емейла</a>
     {% endif %}
 </div>
 {% endblock %}

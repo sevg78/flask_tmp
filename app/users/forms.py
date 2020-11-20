@@ -1,71 +1,77 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, Length, Regexp, Email, EqualTo
-from flask_babelex import _
 
-from app.users.models import User
+from . models import User
 
 
 class RegistrationForm(FlaskForm):
-    email = StringField(_('Email'), validators=[DataRequired(), Length(1, 32), Email()])
-    username = StringField(_('Username'), validators=[DataRequired(), Length(1, 32),
-                                                    Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-                                                    _('Usernames must have only letters, numbers, dots or underscores'))])
-    password = PasswordField('Password', validators=[DataRequired(), Length(8),
-                                                     EqualTo('password_confirm',
-                                                     message=_('Passwords must match.'))])
-    password_confirm = PasswordField(_('Confirm password'), validators=[DataRequired()])
-    submit = SubmitField(_('Register'))
+    email = StringField('Почта', validators=[DataRequired('Это поле является обязательным.'), \
+        Length(1, 32), \
+        Email('Неверный адрес электронной почты.')])
+    username = StringField('Имя пользователя', validators=[DataRequired('Это поле является обязательным.'), \
+        Length(1, 16), \
+        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, 'Имена пользователей должны содержать только буквы, цифры, точки или подчеркивания.')])
+    password = PasswordField('Пароль', validators=[DataRequired('Это поле является обязательным.'), \
+        Length(8, message='Длина поля должна быть не менее 8 символов.'), \
+        EqualTo('password_confirm', 'Пароли не совпадают.')])
+    password_confirm = PasswordField('Повтор пароля', validators=[DataRequired('Это поле является обязательным.')])
+    submit = SubmitField('Регистрация')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
-            raise ValidationError(_('Email already registered.'))
+            raise ValidationError('Адрес электронной почты занят.')
 
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
-            raise ValidationError(_('Username already in use.'))
+            raise ValidationError('Имя пользователя занято.')
 
 
 class LoginForm(FlaskForm):
-    username = StringField(_('Username'), validators=[DataRequired()])
-    password = PasswordField(_('Password'), validators=[DataRequired()])
-    remember = BooleanField(_('Remember Me'))
-    submit = SubmitField(_('Log in'))
+    username = StringField('Пользователь', validators=[DataRequired('Это поле является обязательным.')])
+    password = PasswordField('Пароль', validators=[DataRequired('Это поле является обязательным.')])
+    remember = BooleanField('Запомнить меня')
+    submit = SubmitField('Войти')
 
 
 class EditProfileForm(FlaskForm):
-    name = StringField(_('Real name'), validators=[Length(0, 64)])
-    location = StringField(_('Location'), validators=[Length(0, 64)])
-    about_me = TextAreaField(_('About me'))
-    submit = SubmitField(_('Submit'))
+    name = StringField('Имя', validators=[Length(0, 64)])
+    location = StringField('Местоположение', validators=[Length(0, 64)])
+    about_me = TextAreaField('Обо мне')
+    submit = SubmitField('Применить')
 
 
 class ChangePasswordForm(FlaskForm):
-    old_password = PasswordField(_('Old password'), validators=[DataRequired()])
-    password = PasswordField(_('New password'), validators=[
-        DataRequired(), Length(8), EqualTo('password2', message=_('Passwords must match.'))])
-    password2 = PasswordField(_('Confirm new password'), validators=[DataRequired()])
-    submit = SubmitField(_('Update Password'))
+    old_password = PasswordField('Старый пароль', validators=[DataRequired('Это поле является обязательным.')])
+    password = PasswordField('Новый пароль', validators=[DataRequired('Это поле является обязательным.'), \
+        Length(8, message='Длина поля должна быть не менее 8 символов.'), \
+        EqualTo('password2', 'Пароли не совпадают.')])
+    password2 = PasswordField('Повтор нового пароля', validators=[DataRequired('Это поле является обязательным.')])
+    submit = SubmitField('Обновить пароль')
 
 
 class PasswordResetRequestForm(FlaskForm):
-    email = StringField(_('Email'), validators=[DataRequired(), Length(1, 32),
-                                             Email()])
-    submit = SubmitField(_('Reset Password'))
+    email = StringField('Почта', validators=[DataRequired('Это поле является обязательным.'), 
+        Length(1, 32),
+        Email('Неверный адрес электронной почты.')])
+    submit = SubmitField('Сброс пароля')
 
 
 class PasswordResetForm(FlaskForm):
-    password = PasswordField(_('New Password'), validators=[
-        DataRequired(), Length(8), EqualTo('password2', message=_('Passwords must match'))])
-    password2 = PasswordField(_('Confirm password'), validators=[DataRequired()])
-    submit = SubmitField(_('Reset Password'))
+    password = PasswordField('Новый пароль', validators=[DataRequired('Это поле является обязательным.'), \
+        Length(8, message='Длина поля должна быть не менее 8 символов.'), \
+        EqualTo('password2', 'Пароли не совпадают.')])
+    password2 = PasswordField('Повтор пароля', validators=[DataRequired('Это поле является обязательным.')])
+    submit = SubmitField('Сброс пароля')
 
 
 class ChangeEmailForm(FlaskForm):
-    email = StringField(_('New Email'), validators=[DataRequired(), Length(1, 64), Email()])
-    password = PasswordField(_('Password'), validators=[DataRequired()])
-    submit = SubmitField(_('Update Email Address'))
+    email = StringField('Новая почта', validators=[DataRequired('Это поле является обязательным.'), \
+        Length(1, 64), \
+        Email('Неверный адрес электронной почты.')])
+    password = PasswordField('Пароль', validators=[DataRequired('Это поле является обязательным.')])
+    submit = SubmitField('Обновить почту')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data.lower()).first():
-            raise ValidationError(_('Email already registered.'))
+            raise ValidationError('Электронная почта уже зарегистрирована.')

@@ -3,17 +3,16 @@
 {% block content %}
 <div class="page-header">
     <h1>
-        Hello, {{ current_user.username }}!
+        Привет, {{ current_user.username }}!
     </h1>
-    <h3>You have not confirmed your account yet.</h3>
+    <h3>Вы еще не подтвердили свой аккаунт.</h3>
     <p>
-        For full access to the site you need to confirm your account.
-        Check your inbox, you should have received an email with a confirmation link.
-
+        Для полного доступа к сайту вам необходимо подтвердить свой аккаунт.
+        Проверьте свой почтовый ящик, вы должны были получить электронное письмо со ссылкой подтверждения.
     </p>
     <p>
-        Need another confirmation email?
-        <a href="{{ url_for('users.resend_confirmation') }}">{{ _('Click here') }}</a>
+        Вам нужно еще одно подтверждение по электронной почте?
+        <a href="{{ url_for('users.resend_confirmation') }}">Нажмите сюда.</a>
     </p>
 </div>
   

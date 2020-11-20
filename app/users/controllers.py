@@ -8,7 +8,6 @@ from flask import (
     render_template_string,
     jsonify,
 )
-from flask_babelex import _
 import json
 from datetime import datetime
 from flask_login import login_required, login_user, logout_user, current_user
@@ -52,7 +51,7 @@ def login_modal():
             if user is not None and user.verify_password(form.password.data):
                 login_user(user, form.remember.data)
                 return jsonify(status='ok')
-            return jsonify(status=_('Invalid username or password'))
+            return jsonify(status='Invalid username or password')
         else:
                 data = json.dumps(form.errors, ensure_ascii=False)
                 return jsonify(data)
@@ -77,7 +76,7 @@ def reg():
 @login_required
 def logout():
     logout_user()
-    flash(_('You have been logged out.'))
+    flash('Вы вышли из системы')
     return redirect(url_for('users.index'))
 
 
@@ -94,9 +93,9 @@ def register_modal():
             db.session.add(user)
             db.session.commit()
             token = user.generate_confirmation_token()
-            send_email(user.email, _('Confirm Your Account'),
+            send_email(user.email, 'Confirm Your Account',
                        'users/email/confirm', user=user, token=token)
-            flash(_('A confirmation email has been sent to you by email.'))
+            flash('A confirmation email has been sent to you by email.')
             login_user(user)
             return jsonify(status='ok')
         else:
@@ -112,9 +111,9 @@ def confirm(token):
         return redirect(url_for('users.index'))
     if current_user.confirm(token):
         db.session.commit()
-        flash(_('You have confirmed your account. Thanks!'))
+        flash('You have confirmed your account. Thanks!')
     else:
-        flash(_('The confirmation link is invalid or has expired.'))
+        flash('The confirmation link is invalid or has expired.')
     return redirect(url_for('users.index'))
 
 
@@ -124,9 +123,9 @@ def resend_confirmation():
     if current_user.confirmed_at:
         return redirect(url_for('users.index'))
     token = current_user.generate_confirmation_token()
-    send_email(current_user.email, _('Confirm Your Account'),
+    send_email(current_user.email, 'Confirm Your Account',
                                     'users/email/confirm', user=current_user, token=token)
-    flash(_('A new confirmation email has been sent to you by email.'))
+    flash('A new confirmation email has been sent to you by email.')
     return redirect(url_for('users.index'))
 
 
@@ -149,7 +148,7 @@ def edit_profile():
         current_user.about_me = form.about_me.data
         db.session.add(current_user._get_current_object())
         db.session.commit()
-        flash(_('Your profile has been updated.'))
+        flash('Your profile has been updated.')
         return redirect(url_for('users.user', username=current_user.username))
     form.name.data = current_user.name
     form.location.data = current_user.location
@@ -167,10 +166,10 @@ def change_pass():
                 current_user.password = form.password.data
                 db.session.add(current_user)
                 db.session.commit()
-                flash(_('Your password has been updated.'))
+                flash('Your password has been updated.')
                 return jsonify(status='ok')
             else:
-                return jsonify(status=_('Invalid old password'))
+                return jsonify(status='Invalid old password')
         else:
             data = json.dumps(form.errors, ensure_ascii=False)
             return jsonify(data)
@@ -187,13 +186,13 @@ def password_reset_req():
             user = User.query.filter_by(email=form.email.data.lower()).first()
             if user:
                 token = user.generate_reset_token()
-                send_email(user.email, _('Reset Your Password'),
+                send_email(user.email, 'Reset Your Password',
                         'users/email/reset_password',
                         user=user, token=token)
-                flash(_('An email with instructions to reset your password has been sent to you.'))
+                flash('An email with instructions to reset your password has been sent to you.')
                 return jsonify(status='ok')
             else:
-                return jsonify(status=_('Email not registered'))
+                return jsonify(status='Email not registered')
         else:
             data = json.dumps(form.errors, ensure_ascii=False)
             return jsonify(data)
@@ -216,10 +215,10 @@ def password_res():
         if form.validate_on_submit():
             if User.reset_password(request.form['token'], request.form['password']):
                 db.session.commit()
-                flash(_('Your password has been updated.'))
+                flash('Your password has been updated.')
                 return jsonify(status='ok')
             else:
-                return jsonify(status=_('Error!!!'))
+                return jsonify(status='Error!!!')
         else:
                 data = json.dumps(form.errors, ensure_ascii=False)
                 return jsonify(data)
@@ -243,10 +242,10 @@ def change_email_request():
             token = current_user.generate_email_change_token(new_email)
             send_email(new_email, 'Confirm your email address',
                        'users/email/change_email', user=current_user, token=token)
-            flash(_('An email with instructions to confirm your new email address has been sent to you.'))
+            flash('An email with instructions to confirm your new email address has been sent to you.')
             return redirect(url_for('users.index'))
         else:
-            flash(_('Invalid email or password.'))
+            flash('Invalid email or password.')
     return render_template("users/change_email.html", change_email_form=form)
 
 
@@ -255,9 +254,9 @@ def change_email_request():
 def change_email(token):
     if current_user.change_email(token):
         db.session.commit()
-        flash(_('Your email address has been updated.'))
+        flash('Your email address has been updated.')
     else:
-        flash(_('Invalid request.'))
+        flash('Invalid request.')
     return redirect(url_for('users.index'))
 
 
