@@ -3,7 +3,7 @@
 {{ super() }}
 <script>
 $(document).ready(function () {
-        var url = '/register_modal';
+        var url = "{{ url_for('users.register_modal') }}";
         $.get(url, function (data) {
             $('#Modal .modal-content').html(data);
             $('#Modal').modal();
@@ -13,7 +13,7 @@ $(document).ready(function () {
                     data) {
                     if (data.status == 'ok') {
                         $('#Modal').modal('hide');
-                        $(location).attr('href', '/index');
+                        $(location).attr('href', "{{ url_for('users.index') }}");
                     } else {
                         var obj = JSON.parse(data);
                         for (var key in obj) {

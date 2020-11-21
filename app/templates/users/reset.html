@@ -5,7 +5,7 @@
 <script>
 $(document).ready(function () {
         var token = window.location.pathname.substr(5);
-        var url = '/res_modal';
+        var url = "{{ url_for('users.password_res') }}";
         $.get(url, function (data) {
             $('#Modal .modal-content').html(data);
             $('#Modal').modal();
@@ -17,12 +17,11 @@ $(document).ready(function () {
                     data) {
                         if (data.status == 'ok') {
                         $('#Modal').modal('hide');
-                        var url = '/index'
-                        $(location).attr('href', url);
-                    } if (data.status == 'Error!!!') {
+                        $(location).attr('href', "{{ url_for('users.index') }}");
+                    } if (data.status == 'Ссылка подтверждения недействительна или срок ее действия истек.') {
                         $('.err').remove();
                         $('.help-block').remove();
-                        $('<h4 class="err">' + data.status + ' Invalid token!!!' + '</h4>').insertAfter('.modal-title');
+                        $('<h4 class="err">' + data.status + '</h4>').insertAfter('.modal-title');
                         $('.form-group').addClass('has-error');
                     } else {
                         var obj = JSON.parse(data);

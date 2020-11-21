@@ -3,19 +3,18 @@
 {{ super() }}
 <script>
 $(document).ready(function () {
-        var url = '/login_modal'
+        var url = "{{ url_for('users.login_modal') }}";
         $.get(url, function (data) {
             $('#Modal .modal-content').html(data);
-            $('#Modal').modal();
+            $('#Modal').modal(); 
             $('#submit').click(function (event) {
                 event.preventDefault();
                 $.post(url, data = $('#ModalForm').serialize(), function (
                     data) {
                         if (data.status == 'ok') {
                         $('#Modal').modal('hide');
-                        var url = '/index'
-                        $(location).attr('href', url);
-                    } if (data.status == 'Invalid username or password') {
+                        $(location).attr('href', "{{ url_for('users.index') }}");
+                    } if (data.status == 'Неверное имя пользователя или пароль') {
                         $('.err').remove();
                         $('.help-block').remove();
                         $('<h4 class="err">' + data.status + '</h4>').insertAfter('.modal-title');

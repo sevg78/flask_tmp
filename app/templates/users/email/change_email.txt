@@ -1,8 +1,8 @@
-Dear {{ user.username }},
+Дорогой {{ user.username }},
 
-To confirm your new email address click on the following link:
+Чтобы подтвердить свой новый адрес электронной почты нажмите на следующую ссылку:
 
 {{ url_for('users.change_email', token=token, _external=True) }}
 
 
-Note: replies to this email address are not monitored.
+Отвечать на это письмо не нужно.
