@@ -39,6 +39,8 @@ def create_app():
 
     import app.users.controllers as users
     app.register_blueprint(users.module)
+    import app.posts.controllers as posts
+    app.register_blueprint(posts.module)
 
     # Flask Admin
 

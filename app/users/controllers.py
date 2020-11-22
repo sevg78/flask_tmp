@@ -37,7 +37,7 @@ def unconfirmed():
 @module.route('/')
 @module.route('/index')
 def index():
-    return render_template('users/index.html')
+    return render_template('index.html')
 
 
 @module.route('/login_modal', methods=['GET', 'POST'])

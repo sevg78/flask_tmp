@@ -1,4 +1,5 @@
-from app.database import db
+from . database import db
+from . posts.models import Post
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import login_manager
@@ -40,6 +41,7 @@ class User(db.Model, UserMixin):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     roles = db.relationship('Role', secondary='roles_users', backref=db.backref('users', lazy='dynamic'))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
