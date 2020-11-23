@@ -65,12 +65,20 @@ def create_app():
     class RoleView(AdminMixin, ModelView):
         pass
 
+    class PostView(AdminMixin, ModelView):
+        pass
+
+    class TagView(AdminMixin, ModelView):
+        pass
+
     class FileView(AdminMixin, FileAdmin):
         pass
 
     admin = Admin(app, 'Adminka', url='/', index_view=HomeAdminView(name='Home'), template_mode='bootstrap3')
     admin.add_view(AdminUserView(User, db.session))
     admin.add_view(RoleView(Role, db.session))
+    admin.add_view(PostView(Post, db.session))
+    admin.add_view(TagView(Tag, db.session))
     path = os.path.join(os.path.dirname(__file__), 'static')
     admin.add_view(FileView(path, '/static/', name='Files'))
 
