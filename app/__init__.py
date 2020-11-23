@@ -45,7 +45,7 @@ def create_app():
     # Flask Admin
 
     from wtforms.fields import HiddenField
-    from app.models import User, Role
+    from app.models import User, Role, Post, Tag
 
     class AdminMixin:
         def is_accessible(self):

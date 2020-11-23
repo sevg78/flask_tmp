@@ -146,13 +146,33 @@ class Post(db.Model):
     title = db.Column(db.String(150))
     slug = db.Column(db.String(140), unique=True)
     body = db.Column(db.Text)
-    created = db.Column(db.DateTime, default=datetime.utcnow)
+    created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    tags = db.relationship('Tag', secondary='tags_posts', backref=db.backref('posts', lazy='dynamic'))
 
     def __init__(self, *args, **kwargs):
         super(Post, self).__init__(*args, **kwargs)
         if self.title:
             self.slug = slugify(self.title + str(datetime.utcnow()))
+
+
+class TagsPosts(db.Model):
+    __tablename__ = 'tags_posts'
+    id = db.Column(db.Integer(), primary_key=True)
+    post_id = db.Column('post_id', db.Integer(), db.ForeignKey('post.id'))
+    tag_id = db.Column('tag_id', db.Integer(), db.ForeignKey('tag.id'))
+
+
+class Tag(db.Model):
+    __tablename__ = 'tag'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    slug = db.Column(db.String(100), unique=True)
+
+    def __init__(self, *args, **kwargs):
+        super(Tag, self).__init__(*args, **kwargs)
+        if self.name:
+            self.slug = slugify(self.name + str(datetime.utcnow()))
 
 
 login_manager.anonymous_user = AnonymousUser
