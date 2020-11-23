@@ -8,7 +8,7 @@ from flask_moment import Moment
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin.contrib.sqla import ModelView
-from . database import db
+from app.database import db
 
 login_manager = LoginManager()
 bootstrap = Bootstrap()
@@ -45,7 +45,7 @@ def create_app():
     # Flask Admin
 
     from wtforms.fields import HiddenField
-    from . users.models import User, Role
+    from app.models import User, Role
 
     class AdminMixin:
         def is_accessible(self):

@@ -11,11 +11,11 @@ from flask import (
 import json
 from datetime import datetime
 from flask_login import login_required, login_user, logout_user, current_user
-from . forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
+from app.users.forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
                             PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
-from . models import User
-from . . database import db
-from . mail import send_email
+from app.models import User
+from app.database import db
+from app.users.mail import send_email
 
 module = Blueprint('users', __name__)
 

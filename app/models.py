@@ -1,5 +1,4 @@
-from . database import db
-from . posts.models import Post
+from app.database import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import login_manager
@@ -7,6 +6,7 @@ from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, request
 import hashlib
+from slugify import slugify
 
 
 class RolesUsers(db.Model):
@@ -138,6 +138,21 @@ class User(db.Model, UserMixin):
 class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
         return False
+
+
+class Post(db.Model):
+    __tablename__ = 'post'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150))
+    slug = db.Column(db.String(140), unique=True)
+    body = db.Column(db.Text)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(self, *args, **kwargs):
+        super(Post, self).__init__(*args, **kwargs)
+        if self.title:
+            self.slug = slugify(self.title + str(datetime.utcnow()))
 
 
 login_manager.anonymous_user = AnonymousUser
