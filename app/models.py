@@ -140,6 +140,9 @@ class AnonymousUser(AnonymousUserMixin):
         return False
 
 
+login_manager.anonymous_user = AnonymousUser
+
+
 class Post(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
@@ -174,8 +177,6 @@ class Tag(db.Model):
         if self.name:
             self.slug = slugify(self.name + str(datetime.utcnow()))
 
-
-login_manager.anonymous_user = AnonymousUser
 
 
 @login_manager.user_loader

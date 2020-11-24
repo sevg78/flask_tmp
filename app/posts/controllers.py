@@ -16,3 +16,6 @@ from . . database import db
 module = Blueprint('posts', __name__)
 
 
+@module.route('/news')
+def news():
+    return render_template('posts/news.html')
