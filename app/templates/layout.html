@@ -44,8 +44,8 @@
     {% import "bootstrap/utils.html" as utils %} {{ utils.flashed_messages(dismissible=True, container=False) }}
 
     <div class="blog-header">
-      <h1 class="blog-title"></h1>
-      <p class="lead blog-description"></p>
+      <h1 class="blog-title">{% block title_post%}{% endblock %}</h1>
+      <p class="lead blog-description">{% block pre_title_post%}{% endblock %}</p>
     </div>
 
     <div class="row">

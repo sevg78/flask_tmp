@@ -148,6 +148,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150))
     slug = db.Column(db.String(140), unique=True)
+    pre_body = db.Column(db.Text)
     body = db.Column(db.Text)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))

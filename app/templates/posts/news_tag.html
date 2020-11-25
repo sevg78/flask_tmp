@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title_post%}Новости:{% endblock %}
-{% block pre_title_post%}Новости о монетах, нумизматике и всему, что с этим связано.{% endblock %}
+{% block title_post%}Новости с тэгом {{ tag.name }}:{% endblock %}
 
 {% block content %}
 {% for post in posts%}
