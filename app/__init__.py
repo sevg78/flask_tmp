@@ -54,6 +54,11 @@ def create_app():
         def inaccessible_callback(self, name, **kwargs):
             return redirect(url_for('users.log', next=request.url))
 
+    class BaseModelView(ModelView):
+        def on_model_change(self, form, model, is_created):
+            model.generate_slug()
+            return super(BaseModelView, self).on_model_change(form, model, is_created)
+
     class HomeAdminView(AdminMixin, AdminIndexView):
         pass
 
@@ -65,11 +70,13 @@ def create_app():
     class RoleView(AdminMixin, ModelView):
         pass
 
-    class PostView(AdminMixin, ModelView):
-        pass
+    class PostView(AdminMixin, BaseModelView):
+        column_exclude_list = ('slug')
+        form_overrides = dict(slug=HiddenField)
 
-    class TagView(AdminMixin, ModelView):
-        pass
+    class TagView(AdminMixin, BaseModelView):
+        column_exclude_list = ('slug')
+        form_overrides = dict(slug=HiddenField)
 
     class FileView(AdminMixin, FileAdmin):
         pass

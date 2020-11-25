@@ -155,6 +155,9 @@ class Post(db.Model):
 
     def __init__(self, *args, **kwargs):
         super(Post, self).__init__(*args, **kwargs)
+        self.slug = generate_slug()
+
+    def generate_slug(self):
         if self.title:
             self.slug = slugify(self.title + str(datetime.utcnow()))
 
@@ -174,6 +177,9 @@ class Tag(db.Model):
 
     def __init__(self, *args, **kwargs):
         super(Tag, self).__init__(*args, **kwargs)
+        self.slug = generate_slug()
+
+    def generate_slug(self):
         if self.name:
             self.slug = slugify(self.name + str(datetime.utcnow()))
 
