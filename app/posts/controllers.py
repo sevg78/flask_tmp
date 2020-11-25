@@ -11,11 +11,14 @@ from flask import (
 import json
 from datetime import datetime
 from flask_login import current_user
-from . . database import db
+from app.database import db
+from app.models import Post
+
 
 module = Blueprint('posts', __name__)
 
 
 @module.route('/news')
 def news():
-    return render_template('posts/news.html')
+    posts = Post.query.all()
+    return render_template('posts/news.html', posts=posts)
