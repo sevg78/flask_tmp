@@ -134,6 +134,9 @@ class User(db.Model, UserMixin):
                 return True
         return False
 
+    def __str__(sefl):
+        return '{}'.format(sefl.username)
+
 
 class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
@@ -162,6 +165,9 @@ class Post(db.Model):
         if self.title:
             self.slug = slugify(self.title + str(datetime.utcnow()))
 
+    def __str__(sefl):
+        return '<{}>-{}'.format(sefl.id, sefl.title)
+
 
 class TagsPosts(db.Model):
     __tablename__ = 'tags_posts'
@@ -184,6 +190,8 @@ class Tag(db.Model):
         if self.name:
             self.slug = slugify(self.name + str(datetime.utcnow()))
 
+    def __str__(sefl):
+        return '{}'.format(sefl.name)
 
 
 @login_manager.user_loader

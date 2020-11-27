@@ -20,7 +20,11 @@ module = Blueprint('posts', __name__)
 
 @module.route('/news')
 def news():
-    posts = Post.query.order_by(Post.created.desc()).all()
+    q = request.args.get('q')
+    if q:
+        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q)).all()
+    else:
+        posts = Post.query.order_by(Post.created.desc())
     return render_template('posts/news.html', posts=posts)
 
 @module.route('/news/<slug>')

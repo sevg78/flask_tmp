@@ -8,11 +8,12 @@
   {% if post.tags %}
     <p class="blog-post-meta">
     {% for tag in post.tags %}  
-    <a class="btn btn-primary btn-xs" href="{{ url_for('posts.tags', slug=tag.slug) }}" role="button">{{ tag.name }}</a> 
+    <a class="btn btn-primary btn-xs" href="{{ url_for('posts.tag_detail', slug=tag.slug) }}" role="button">{{ tag.name }}</a>
     {% endfor%}
     </p>
   {% endif %}
   
+  {{ post.pre_body|safe }}
   {{ post.body|safe }}
 
   <hr>
