@@ -18,14 +18,20 @@ from app.models import Post, Tag
 module = Blueprint('posts', __name__)
 
 
-@module.route('/news')
+@module.route('/news/')
 def news():
     q = request.args.get('q')
+    page = request.args.get('page')
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
     if q:
-        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q)).all()
+        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q))
     else:
         posts = Post.query.order_by(Post.created.desc())
-    return render_template('posts/news.html', posts=posts)
+    pages = posts.paginate(page=page, per_page=3)
+    return render_template('posts/news.html', posts=posts, pages=pages)
 
 @module.route('/news/<slug>')
 def news_detal(slug):

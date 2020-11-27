@@ -4,7 +4,7 @@
 {% block pre_title_post%}Новости о монетах, нумизматике и всему, что с этим связано.{% endblock %}
 
 {% block content %}
-{% for post in posts%}
+{% for post in pages.items %}
 <div class="blog-post">
   <h2 class="blog-post-title">{{ post.title }}</h2>
   <p class="blog-post-meta">{{ moment(post.created).format('LLL') }} 
@@ -26,8 +26,15 @@
 {% endfor %}
 <nav>
   <ul class="pager">
-    <li><a href="#">Previous</a></li>
-    <li><a href="#">Next</a></li>
+    <li {% if not pages.has_prev %} class="disabled" {% endif %}>
+      <a href="?page={{ pages.prev_num }}">Previous</a></li>    
+    <li {% if not pages.has_next %} class="disabled" {% endif %}>
+    <a href="?page={{ pages.next_num }}">Next</a></li>
+  </ul>
+  <ul class="pagination">
+    {% for page in pages.iter_pages() %}
+    <li {% if page == pages.page %} class="active" {% endif %}><a href="?page={{ page }}">{{ page }}</a>
+    {% endfor %}
   </ul>
 </nav>
 
