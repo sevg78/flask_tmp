@@ -3,7 +3,7 @@
 {% block content %}
 <div class="blog-post">
   <h2 class="blog-post-title">{{ post.title }}</h2>
-  <p class="blog-post-meta">{{ moment(post.created).format('LLL') }} 
+  <p class="blog-post-meta">Добавлено {{ moment(post.created).format('LLL') }} 
     <a href="{{ url_for('users.user', username=post.author.username) }}">{{ post.author.username }}</a></p>
   {% if post.tags %}
     <p class="blog-post-meta">
@@ -15,7 +15,8 @@
   
   {{ post.pre_body|safe }}
   {{ post.body|safe }}
-
+  <hr>
+  <p class="blog-post-meta">Просмотров {{ post.count }}</p>
   <hr>
 
 </div>

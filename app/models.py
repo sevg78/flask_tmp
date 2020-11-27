@@ -9,6 +9,14 @@ import hashlib
 from slugify import slugify
 
 
+class StatPost(db.Model):
+    __tablename__ = 'stat_post'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column('user_id', db.Integer(), db.ForeignKey('user.id'))
+    post_id = db.Column('post_id', db.Integer(), db.ForeignKey('post.id'))
+    like = db.Column(db.Boolean, default=None)
+    count = db.Column(db.Integer(), default=0)
+
 class RolesUsers(db.Model):
     __tablename__ = 'roles_users'
     id = db.Column(db.Integer(), primary_key=True)
@@ -154,6 +162,7 @@ class Post(db.Model):
     pre_body = db.Column(db.Text)
     body = db.Column(db.Text)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    count = db.Column(db.Integer, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tags = db.relationship('Tag', secondary='tags_posts', backref=db.backref('posts', lazy='dynamic'))
 
