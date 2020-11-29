@@ -84,7 +84,7 @@ def logout():
 def register_modal():
     if current_user.is_authenticated:
         return redirect(url_for('users.index'))
-    form =RegistrationForm()
+    form = RegistrationForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             user = User(email=form.email.data,

@@ -9,6 +9,7 @@ from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin.contrib.sqla import ModelView
 from app.database import db
+from flask_ckeditor import CKEditor
 
 login_manager = LoginManager()
 bootstrap = Bootstrap()
@@ -16,6 +17,7 @@ csrf_protect = CSRFProtect()
 mail = Mail()
 moment = Moment()
 admin = Admin()
+ckeditor = CKEditor()
 
 
 def create_app():
@@ -30,6 +32,8 @@ def create_app():
     login_manager.login_view = 'users.log'
 
     bootstrap.init_app(app)
+
+    ckeditor.init_app(app)
 
     mail.init_app(app)
 

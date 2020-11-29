@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+
+{% from "bootstrap/wtf.html" import form_field %}
+<h1>Создание поста:</h1>
+<div class="col-md-12">
+  <form class="form" action="{{ url_for('posts.create_post') }}" method="POST" name="create_post_form">
+    {{ create_post_form.hidden_tag() }}
+    {{ form_field(create_post_form.title) }}
+    {{ form_field(create_post_form.pre_body) }}
+    {{ form_field(create_post_form.body) }}
+
+    {{ form_field(create_post_form.submit, class="btn btn-primary") }}
+  </form>
+  {{ ckeditor.load() }}
+  {{ ckeditor.config(name='body') }}
+</div>
+{% endblock %}

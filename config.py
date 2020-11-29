@@ -14,6 +14,12 @@ class Config(object):
 
     PER_PAGE_NEWS = 5
 
+    CKEDITOR_ENABLE_CSRF = True
+    CKEDITOR_PKG_TYPE = 'full'          #basic, standard, standard-all, full, full-all
+    CKEDITOR_HEIGHT = '300'
+    CKEDITOR_FILE_UPLOADER = '/static/img/'
+    CKEDITOR_FILE_BROWSER = '/static/'
+
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_SSL = False
