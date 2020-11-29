@@ -17,8 +17,12 @@ class Config(object):
     CKEDITOR_ENABLE_CSRF = True
     CKEDITOR_PKG_TYPE = 'full'          #basic, standard, standard-all, full, full-all
     CKEDITOR_HEIGHT = '300'
-    CKEDITOR_FILE_UPLOADER = '/static/img/'
-    CKEDITOR_FILE_BROWSER = '/static/'
+    CKEDITOR_FILE_UPLOADER = '/news/upload-image'
+    CKEDITOR_FILE_BROWSER = '/news/check-file'
+
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024
+    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+    UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'app\\static\\img\\')
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587

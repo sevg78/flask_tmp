@@ -17,6 +17,7 @@ from flask_login import current_user, login_required
 from app.database import db
 from app.models import Post, Tag, StatPost
 from app.posts.forms import CreatePostForm
+from flask_ckeditor import upload_success, upload_fail
 
 module = Blueprint('posts', __name__)
 app = current_app
@@ -77,21 +78,21 @@ def create_post():
     return render_template('posts/create_post.html', create_post_form=form)
 
 
-@module.route('/static/img/', methods=['POST'])
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
+@module.route('/news/upload-image', methods=['POST'])
 def upload_image_post():
+    
     item = request.files.get('upload')
+    if allowed_file(item.filename):
+        return upload_fail(message='Тока картинку, блеать!!!')
     hash = random.getrandbits(128)
     ext = item.filename.split('.')[-1]
     path = '{}.{}'.format(hash, ext)
 
-    result_data = """
-    <html><body><script>window.parent.CKEDITOR.tools.callFunction("{num}", "{path}", "{error}");</script></body></html>
-    """
-
-    item.save(os.path.join('static/img/', path))
-
-    result = result_data.replace('{num}', request.args.get('CKEditorFuncNum'))
-    result = result.replace('{path}', '/static/img/' + path)
-    result = result.replace('{error}', '')
-
-    return result
+    url = os.path.join(app.config['UPLOAD_FOLDER'], path)
+    item.save(url)
+    
+    return upload_success(url=url)
