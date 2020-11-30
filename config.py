@@ -20,9 +20,9 @@ class Config(object):
     CKEDITOR_FILE_UPLOADER = '/news/upload-image'
     CKEDITOR_FILE_BROWSER = '/news/check-file'
 
-    MAX_CONTENT_LENGTH = 5 * 1024 * 1024
-    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-    UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'app\\static\\img\\')
+    MAX_CONTENT_LENGTH = 1 * 1024 * 1024
+    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+    UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'app\\static\\img\\posts\\')
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587

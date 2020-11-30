@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .item {
+                float: left;
+                width: 200px;
+                height: 200px;
+                margin: 5px;
+                cursor: pointer;
+                background: no-repeat center;
+                background-size: cover;
+            }
+            .item:hover {
+                box-shadow: 0 0 5px 0 red;
+            }
+        </style>
+    </head>
+    <body>
+        {% for item in files %}
+
+            <div class="item"
+                 data-url="{{ url_for('static', filename="img/posts/" + item.path) }}"
+                 style="background-image: url('{{ url_for('static', filename="img/posts/" + item.path) }}') "></div>
+
+        {% endfor %}
+
+        <script>
+            function getUrlParam( paramName ) {
+                var reParam = new RegExp( '(?:[\?&]|&)' + paramName + '=([^&]+)', 'i' );
+                var match = window.location.search.match( reParam );
+
+                return ( match && match.length > 1 ) ? match[1] : null;
+            }
+
+            document.addEventListener('click', function (event) {
+                var element = event.target;
+                if (element.classList.contains('item') && window.opener) {
+                    var funcNum = getUrlParam( 'CKEditorFuncNum' );
+                    var fileUrl = element.getAttribute('data-url');
+
+                    window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
+                    window.close();
+                }
+            });
+        </script>
+    </body>
+</html>

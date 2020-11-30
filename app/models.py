@@ -50,6 +50,7 @@ class User(db.Model, UserMixin):
     avatar_hash = db.Column(db.String(32))
     roles = db.relationship('Role', secondary='roles_users', backref=db.backref('users', lazy='dynamic'))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    img = db.relationship('StorageImg', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -202,6 +203,16 @@ class Tag(db.Model):
     def __str__(sefl):
         return '{}'.format(sefl.name)
 
+
+class StorageImg(db.Model):
+    __tablename__ = 'storageimg'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    path = db.Column(db.String(100))
+    type = db.Column(db.String(5))
+    create_date = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 @login_manager.user_loader
 def load_user(user_id):

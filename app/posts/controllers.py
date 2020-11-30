@@ -15,7 +15,7 @@ import os
 from datetime import datetime
 from flask_login import current_user, login_required
 from app.database import db
-from app.models import Post, Tag, StatPost
+from app.models import Post, Tag, StatPost, StorageImg
 from app.posts.forms import CreatePostForm
 from flask_ckeditor import upload_success, upload_fail
 
@@ -68,9 +68,8 @@ def tag_detail(slug):
 
 
 @module.route('/news/create_post')
+@login_required
 def create_post():
-    if current_user.is_authenticated:
-        return redirect(url_for('users.index'))
     form = CreatePostForm()
     if form.validate_on_submit():
         print('=====>')
@@ -79,20 +78,33 @@ def create_post():
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+    return not filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
 @module.route('/news/upload-image', methods=['POST'])
 def upload_image_post():
-    
     item = request.files.get('upload')
     if allowed_file(item.filename):
-        return upload_fail(message='Тока картинку, блеать!!!')
+        return upload_fail(message="Допустимые типы загружаемых файлов: 'png', 'jpg', 'jpeg', 'gif'")
     hash = random.getrandbits(128)
     ext = item.filename.split('.')[-1]
     path = '{}.{}'.format(hash, ext)
+
+    storage = StorageImg(
+        name=item.filename,
+        type=ext,
+        path=path,
+        user_id=current_user.id,
+    )
+    db.session.add(storage)
+    db.session.commit()
 
     url = os.path.join(app.config['UPLOAD_FOLDER'], path)
     item.save(url)
     
     return upload_success(url=url)
+
+
+@module.route('/news/check-file')
+def check_file_handler():
+    return render_template('file-browse.html', files=StorageImg.query.filter(StorageImg.user_id == current_user.id).all())

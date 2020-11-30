@@ -9,7 +9,7 @@ from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin.contrib.sqla import ModelView
 from app.database import db
-from flask_ckeditor import CKEditor
+from flask_ckeditor import CKEditor, CKEditorField
 
 login_manager = LoginManager()
 bootstrap = Bootstrap()
@@ -49,7 +49,7 @@ def create_app():
     # Flask Admin
 
     from wtforms.fields import HiddenField
-    from app.models import User, Role, Post, Tag
+    from app.models import User, Role, Post, Tag, StorageImg
 
     class AdminMixin:
         def is_accessible(self):
@@ -74,9 +74,14 @@ def create_app():
     class RoleView(AdminMixin, ModelView):
         pass
 
+    class ImgView(AdminMixin, ModelView):
+        pass
+
     class PostView(AdminMixin, BaseModelView):
         column_exclude_list = ('slug')
-        form_overrides = dict(slug=HiddenField)
+        form_overrides = dict(slug=HiddenField, body=CKEditorField)
+        create_template = 'admin/edit.html'
+        edit_template = 'admin/edit.html'
 
     class TagView(AdminMixin, BaseModelView):
         column_exclude_list = ('slug')
@@ -90,6 +95,7 @@ def create_app():
     admin.add_view(RoleView(Role, db.session))
     admin.add_view(PostView(Post, db.session))
     admin.add_view(TagView(Tag, db.session))
+    admin.add_view(ImgView(StorageImg, db.session))
     path = os.path.join(os.path.dirname(__file__), 'static')
     admin.add_view(FileView(path, '/static/', name='Files'))
 
