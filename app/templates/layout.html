@@ -66,7 +66,7 @@
             <button type="submit" class="btn btn-default">Найти</button>
           </form>
         </div>
-        <div class="sidebar-module">
+        <div class="sidebar-module" id="tags">
 
           {% block tags%}{% endblock %}
           
@@ -116,6 +116,24 @@
 {{ moment.include_moment() }}
 {{ moment.lang('ru') }}
 <script src="https://cdn.ckeditor.com/4.15.1/full-all/ckeditor.js"></script>
+<script>
+  var url = "{{ url_for('posts.get_tags') }}";
+  $.get(url).done(function(data){     
+    var obj = JSON.parse(data);
+    for (var key in obj) {
+      console.log(key);
+      console.log(obj[key][0]);
+      console.log(obj[key][1]);
+      console.log('----------------');
+      var slug = obj[key][1];
+      var href = "{{ url_for('posts.tag_detail', slug='') }}" + slug;
+      var style = "font-size: " + str(obj[key][0]*4) + "%";
+      var text = key;
+      $("#tags").append('<a href="'+href+'" style="'+ style+'">'+text+'</a>');
+      
+    }
+  })
+</script>
 {% endblock %}
 
 

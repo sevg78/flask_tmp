@@ -34,7 +34,14 @@ def tag_weight():
     for i in t:
         sl = Tag.query.filter(Tag.name == i).first().slug
         w[i] = (int((t.count(i)*100)/m), sl)
+    #data = json.dumps(w)
     return w
+
+
+@module.route('/get_tags', methods=['GET', 'POST'])
+def get_tags():
+    data = json.dumps(tag_weight())
+    return jsonify(data)
 
 
 @module.route('/news/')
