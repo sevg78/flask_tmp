@@ -6,7 +6,6 @@ from flask_mail import Mail
 from flask_login import LoginManager, current_user
 from flask_moment import Moment
 from flask_admin import Admin, AdminIndexView
-from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin.contrib.sqla import ModelView
 from app.database import db
 from flask_ckeditor import CKEditor, CKEditorField
@@ -87,16 +86,11 @@ def create_app():
         column_exclude_list = ('slug')
         form_overrides = dict(slug=HiddenField)
 
-    class FileView(AdminMixin, FileAdmin):
-        pass
-
     admin = Admin(app, 'Adminka', url='/', index_view=HomeAdminView(name='Home'), template_mode='bootstrap3')
     admin.add_view(AdminUserView(User, db.session))
     admin.add_view(RoleView(Role, db.session))
     admin.add_view(PostView(Post, db.session))
     admin.add_view(TagView(Tag, db.session))
     admin.add_view(ImgView(StorageImg, db.session))
-    path = os.path.join(os.path.dirname(__file__), 'static')
-    admin.add_view(FileView(path, '/static/', name='Files'))
 
     return app

@@ -23,6 +23,20 @@ module = Blueprint('posts', __name__)
 app = current_app
 
 
+def tag_weight():
+    p = Post.query.all()
+    w = {}
+    t = []
+    for post in p:
+        for tags in post.tags:
+            t.append(tags.name)
+    m = max([t.count(i) for i in t])
+    for i in t:
+        sl = Tag.query.filter(Tag.name == i).first().slug
+        w[i] = (int((t.count(i)*100)/m), sl)
+    return w
+
+
 @module.route('/news/')
 def news():
     q = request.args.get('q')
@@ -36,7 +50,8 @@ def news():
     else:
         posts = Post.query.order_by(Post.created.desc())
     pages = posts.paginate(page=page, per_page=app.config['PER_PAGE_NEWS'], error_out=False)
-    return render_template('posts/news.html', posts=posts, pages=pages)
+    tag_weight()
+    return render_template('posts/news.html', posts=posts, pages=pages, tags=tag_weight())
 
 
 @module.route('/news/<slug>')
