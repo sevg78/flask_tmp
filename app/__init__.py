@@ -10,6 +10,7 @@ from flask_admin.contrib.sqla import ModelView
 from app.database import db
 from flask_ckeditor import CKEditor, CKEditorField
 
+
 login_manager = LoginManager()
 bootstrap = Bootstrap()
 csrf_protect = CSRFProtect()

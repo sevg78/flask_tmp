@@ -143,6 +143,12 @@ class User(db.Model, UserMixin):
                 return True
         return False
 
+    def is_writer(sefl):
+        for r in sefl.roles:
+            if str(r) == 'post':
+                return True
+        return False
+
     def __str__(sefl):
         return '{}'.format(sefl.username)
 
@@ -163,17 +169,18 @@ class Post(db.Model):
     pre_body = db.Column(db.Text)
     body = db.Column(db.Text)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    updated = db.Column(db.DateTime)
     count = db.Column(db.Integer, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tags = db.relationship('Tag', secondary='tags_posts', backref=db.backref('posts', lazy='dynamic'))
 
     def __init__(self, *args, **kwargs):
         super(Post, self).__init__(*args, **kwargs)
-        self.slug = generate_slug()
+        self.slug = self.generate_slug()
 
     def generate_slug(self):
         if self.title:
-            self.slug = slugify(self.title + str(datetime.utcnow()))
+            return slugify(self.title + str(datetime.utcnow()))
 
     def __str__(sefl):
         return '<{}>-{}'.format(sefl.id, sefl.title)
@@ -194,11 +201,11 @@ class Tag(db.Model):
 
     def __init__(self, *args, **kwargs):
         super(Tag, self).__init__(*args, **kwargs)
-        self.slug = generate_slug()
+        self.slug = self.generate_slug()
 
     def generate_slug(self):
         if self.name:
-            self.slug = slugify(self.name + str(datetime.utcnow()))
+            return slugify(self.name + str(datetime.utcnow()))
 
     def __str__(sefl):
         return '{}'.format(sefl.name)

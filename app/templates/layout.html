@@ -30,6 +30,11 @@
             <a class="blog-nav-item navbar-right" href="{{ url_for('users.log') }}"><span class="glyphicon glyphicon-log-in"></span>  Войти</a>
             {% endif %}        
           {% if current_user.is_authenticated %}
+            {% if current_user.is_administrator() or current_user.is_writer() %}
+              <a class="blog-nav-item navbar-right" style="color: rgb(0, 255, 0)" href="{{ url_for('posts.create_post') }}">Создать пост</a>
+            {% endif %}
+          {% endif %}
+          {% if current_user.is_authenticated %}
                 {% if current_user.is_administrator() %}
               <a class="blog-nav-item navbar-right" style="color: rgb(255, 0, 0)" href="{{ url_for('admin.index') }}">Админ</a>
                 {% endif %}
@@ -67,9 +72,6 @@
           </form>
         </div>
         <div class="sidebar-module" id="tags">
-
-          {% block tags%}{% endblock %}
-          
         </div>
         <div class="sidebar-module">
           <h4>Archives</h4>
@@ -118,19 +120,15 @@
 <script src="https://cdn.ckeditor.com/4.15.1/full-all/ckeditor.js"></script>
 <script>
   var url = "{{ url_for('posts.get_tags') }}";
-  $.get(url).done(function(data){     
+  $.get(url, function(data){     
     var obj = JSON.parse(data);
+    $("#tags").append('<h4>Тэги:</h4>');
     for (var key in obj) {
-      console.log(key);
-      console.log(obj[key][0]);
-      console.log(obj[key][1]);
-      console.log('----------------');
+      var text = key;
       var slug = obj[key][1];
       var href = "{{ url_for('posts.tag_detail', slug='') }}" + slug;
-      var style = "font-size: " + str(obj[key][0]*4) + "%";
-      var text = key;
-      $("#tags").append('<a href="'+href+'" style="'+ style+'">'+text+'</a>');
-      
+      var style = "font-size: " + String(obj[key][0]*4) + "%";
+      $("#tags").append('<a href="' + href + '" style="' + style + '">' + text + '</a> ');
     }
   })
 </script>

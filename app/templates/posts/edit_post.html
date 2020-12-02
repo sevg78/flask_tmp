@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+
+{% from "bootstrap/wtf.html" import form_field %}
+<h1>Редактирование поста:</h1>
+<div class="col-md-12">
+  <form class="form" action="{{ url_for('posts.edit_post', slug=post.slug) }}" method="POST" name="edit_post_form">
+    {{ edit_post_form.hidden_tag() }}
+    {{ form_field(edit_post_form.title) }}
+    {{ form_field(edit_post_form.pre_body) }}
+    {{ form_field(edit_post_form.body) }}
+
+    {{ form_field(edit_post_form.submit, class="btn btn-primary") }}
+  </form>
+  {{ ckeditor.load() }}
+  {{ ckeditor.config(name='body') }}
+</div>
+{% endblock %}
