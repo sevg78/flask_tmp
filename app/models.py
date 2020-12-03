@@ -176,11 +176,11 @@ class Post(db.Model):
 
     def __init__(self, *args, **kwargs):
         super(Post, self).__init__(*args, **kwargs)
-        self.slug = self.generate_slug()
+        self.generate_slug()
 
     def generate_slug(self):
         if self.title:
-            return slugify(self.title + str(datetime.utcnow()))
+            self.slug = slugify(self.title + str(datetime.utcnow()))
 
     def __str__(sefl):
         return '<{}>-{}'.format(sefl.id, sefl.title)
@@ -201,11 +201,11 @@ class Tag(db.Model):
 
     def __init__(self, *args, **kwargs):
         super(Tag, self).__init__(*args, **kwargs)
-        self.slug = self.generate_slug()
+        self.generate_slug()
 
     def generate_slug(self):
         if self.name:
-            return slugify(self.name + str(datetime.utcnow()))
+            self.slug = slugify(self.name + str(datetime.utcnow()))
 
     def __str__(sefl):
         return '{}'.format(sefl.name)

@@ -62,8 +62,7 @@ def news():
     else:
         posts = Post.query.order_by(Post.created.desc())
     pages = posts.paginate(page=page, per_page=app.config['PER_PAGE_NEWS'], error_out=False)
-    tag_weight()
-    return render_template('posts/news.html', posts=posts, pages=pages, tags=tag_weight())
+    return render_template('posts/news.html', pages=pages)
 
 
 @module.route('/news/<slug>')
@@ -87,7 +86,7 @@ def news_detal(slug):
     return render_template('posts/news_detail.html', post=post)
 
 
-@module.route('/news/<slug>')
+@module.route('/news_tag/<slug>')
 def tag_detail(slug):
     tag = Tag.query.filter(Tag.slug == slug).first()
     posts = tag.posts
@@ -102,6 +101,7 @@ def create_post():
         post = Post(title=form.title.data,
                     pre_body=form.pre_body.data,
                     body=form.body.data)
+        post.author = current_user
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('posts.news'))
