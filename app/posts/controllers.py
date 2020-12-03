@@ -67,7 +67,7 @@ def news():
 
 @module.route('/news/<slug>')
 @login_required
-def news_detal(slug):
+def news_detail(slug):
     post = Post.query.filter(Post.slug == slug).first()
     post.count += 1
     stat = StatPost.query.filter(StatPost.user_id==current_user.id).all()
@@ -112,13 +112,16 @@ def create_post():
 @login_required
 def edit_post(slug):
     post = Post.query.filter(Post.slug == slug).first()
-    if request.method == 'POST':
-        form = PostForm(formdata=request.form, obj=post)
-        form.populate_obj(post)
-        db.session.commit()
-        return redirect(url_for('posts.news_detail.html', post=post))
-    form = PostForm(obj=post)
-    return render_template('posts/edit_post.html', edit_post_form=form, post=post)
+    if post.author.username == current_user.username:
+        if request.method == 'POST':
+            form = PostForm(formdata=request.form, obj=post)
+            form.populate_obj(post)
+            post.updated = datetime.utcnow()
+            db.session.commit()
+            return redirect(url_for('posts.news_detail.html, post=post'))
+        form = PostForm(obj=post)
+        return render_template('posts/edit_post.html', edit_post_form=form, post=post)
+    return redirect(url_for('posts.news'))
 
 
 def allowed_file(filename):

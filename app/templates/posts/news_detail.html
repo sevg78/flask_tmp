@@ -16,8 +16,10 @@
   {{ post.pre_body|safe }}
   {{ post.body|safe }}
   <hr>
-  <a class="btn btn-primary" href="{{ url_for('posts.edit_post', slug=post.slug) }}">Редактировать</a>
+  {% if post.author.username == current_user.username %}
+  <a class="btn btn-primary" href="{{ url_for('posts.edit_post', slug=post.slug) }}">Редактировать пост</a>
   <hr>
+  {% endif %}
   <p class="blog-post-meta">Просмотров {{ post.count }}</p>
   <hr>
 
