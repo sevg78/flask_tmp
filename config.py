@@ -29,7 +29,7 @@ class Config(object):
     MAIL_USE_SSL = False
     MAIL_USE_TLS = True
     MAIL_USERNAME = 'sevg78@gmail.com'
-    MAIL_PASSWORD = 'ss101325270878SS'
+    MAIL_PASSWORD = 'xxx'
     MAIL_DEFAULT_SENDER = '"Admin" <sevg78@gmail.com>'
 
     BABEL_TRANSLATION_DIRECTORIES = os.path.join(os.path.abspath(
